@@ -5,8 +5,11 @@ Whisper is a general-purpose speech recognition model that can be used for a var
 It is a transformer encoder-decoder model that the encoder and decoder can be separately hosted on different devices.
 What's more, encoder and decoder have different throughput, which makes it possible to deploy encoder on a high-performance device and decoder on a low-power device.
 
+## 🚀 Highlights
 
-# 🚀 Quickstart
+- **Efficient**: The encoder and decoder is decoupled, which makes it possible to deploy encoder and decoder on different devices. 
+- **Scalable**: The encoder and decoder can be deployed with different replicas, which makes it possible to best utilize the device resources.
+
 
 ## 💾 Installation
 
