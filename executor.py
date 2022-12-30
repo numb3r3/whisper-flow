@@ -95,14 +95,19 @@ class WhisperExecutor(Executor):
                 lang = max(probs[0], key=probs[0].get)
 
                 # transcribe the audio
-                result = whisper.decoding.decode(
+                results = whisper.decoding.decode(
                     self._model,
                     encodings,
                     options=whisper.DecodingOptions(
-                        **self._decode_options, language=lang
+                        **self._decode_options,
+                        language=lang,
+                        task=kwargs.get('task', 'transcribe'),
                     ),
                 )
-                docs.texts = [r.text for r in result]
+            for d, r in zip(docs, results):
+                d.text = r.text
+                d.tags['no_speech_prob'] = r.no_speech_prob
+                d.tags['language'] = r.language
         else:
             self.load_audio(docs)
             with torch.inference_mode():
@@ -111,14 +116,20 @@ class WhisperExecutor(Executor):
 
                 # detect the spoken language
                 _, probs = self._model.detect_language(mels)
-                lang = max(probs, key=probs.get)
+                lang = max(probs[0], key=probs[0].get)
 
                 # transcribe the audio
-                result = whisper.decoding.decode(
+                results = whisper.decoding.decode(
                     self._model,
                     mels,
                     options=whisper.DecodingOptions(
-                        **self._decode_options, language=lang
+                        **self._decode_options,
+                        language=lang,
+                        task=kwargs.get('task', 'transcribe'),
                     ),
                 )
-                docs.texts = [r.text for r in result]
+
+            for d, r in zip(docs, results):
+                d.text = r.text
+                d.tags['no_speech_prob'] = r.no_speech_prob
+                d.tags['language'] = r.language
