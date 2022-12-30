@@ -31,12 +31,18 @@ class WhisperExecutor(Executor):
 
         self._mode = mode
 
-        self._model = whisper.load_model(name, device=device)
+        self._model = whisper.load_model(name, device='cpu')
         self._model.eval()
 
-        self._options = whisper.DecodingOptions(
-            fp16=False if self._device == 'cpu' else True
-        )
+        # load partial model to device
+        if self._mode == 'encoder':
+            self._model.encoder = self._model.encoder.to(self._device)
+        elif self._mode == 'decoder':
+            self._model.decoder = self._model.decoder.to(self._device)
+        else:
+            self._model = self._model.to(self._device)
+
+        self._decode_options = dict(fp16=False if self._device == 'cpu' else True)
 
         self.logger.info(
             f'Loaded {"multilingual" if self._model.is_multilingual else "english-only"} model {name}'
@@ -54,7 +60,7 @@ class WhisperExecutor(Executor):
             elif doc.blob is not None:
                 ext = doc.tags.get('ext', 'wav')
                 with tempfile.NamedTemporaryFile(
-                    suffix=f'.{ext}' if docs.tags.get('ext', None) else None
+                    suffix=f'.{ext}' if doc.tags.get('ext', None) else None
                 ) as fp:
                     fp.write(doc.blob)
                     fp.flush()
@@ -70,23 +76,49 @@ class WhisperExecutor(Executor):
         if self._mode.lower() == 'encoder':
             self.load_audio(docs)
             with torch.inference_mode():
-                docs.embeddings = self._model.encoder(docs.tensors)
+                embeddings = self._model.encoder(docs.tensors.to(self._device))
+            docs.embeddings = embeddings.detach().cpu()
+
         # in decoder mode, only the decoder is used to transcribe the audio features
         elif self._mode.lower() == 'decoder':
             if docs.embeddings is None:
                 raise ValueError(
-                    'No audio embeddings found in the document, '
-                    'please use encoder mode to extract the embeddings first'
+                    'No audio features extracted in the document, '
+                    'please use encoder to extract audio features first'
                 )
             with torch.inference_mode():
+                # get the audio features from the embeddings
+                encodings = docs.embeddings.to(self._device)
+
+                # detect the spoken language
+                _, probs = self._model.detect_language(encodings)
+                lang = max(probs[0], key=probs[0].get)
+
+                # transcribe the audio
                 result = whisper.decoding.decode(
-                    self._model, docs.embeddings, options=self._options
+                    self._model,
+                    encodings,
+                    options=whisper.DecodingOptions(
+                        **self._decode_options, language=lang
+                    ),
                 )
                 docs.texts = [r.text for r in result]
         else:
             self.load_audio(docs)
             with torch.inference_mode():
+                # get the audio mel-spectrogram from the tensors
+                mels = docs.tensors.to(self._device)
+
+                # detect the spoken language
+                _, probs = self._model.detect_language(mels)
+                lang = max(probs, key=probs.get)
+
+                # transcribe the audio
                 result = whisper.decoding.decode(
-                    self._model, docs.tensors, options=self._options
+                    self._model,
+                    mels,
+                    options=whisper.DecodingOptions(
+                        **self._decode_options, language=lang
+                    ),
                 )
                 docs.texts = [r.text for r in result]
