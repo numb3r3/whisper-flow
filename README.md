@@ -1,4 +1,13 @@
-
+<p align="center">
+<br>
+<br>
+<br>
+<img src=".github/overview.svg?raw=true" alt="best-practice-deploy-seq2seq" width="200px">
+<br>
+<br>
+<br>
+<b>Distributed Sequence-to-Sequence Model Deployment</b>
+</p>
 
 **Whisper-Flow** is an efficient and scalable deployment of [OpenAI Whisper](https://github.com/openai/whisper) model. 
 Whisper is a general-purpose speech recognition model that can be used for a variety of tasks. 
