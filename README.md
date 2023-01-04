@@ -1,3 +1,10 @@
+
+**Whisper-Flow** is an efficient and scalable deployment of [OpenAI Whisper](https://github.com/openai/whisper) model. 
+Whisper is a general-purpose speech recognition model that can be used for a variety of tasks. 
+It is a transformer encoder-decoder model that the encoder and decoder can be separately hosted on different devices.
+What's more, encoder and decoder have different throughput, which makes it possible to deploy encoder on a high-performance device and decoder on a low-power device.
+
+
 <p align="center">
 <br>
 <br>
@@ -9,10 +16,6 @@
 <b>Distributed Sequence-to-Sequence Model Deployment</b>
 </p>
 
-**Whisper-Flow** is an efficient and scalable deployment of [OpenAI Whisper](https://github.com/openai/whisper) model. 
-Whisper is a general-purpose speech recognition model that can be used for a variety of tasks. 
-It is a transformer encoder-decoder model that the encoder and decoder can be separately hosted on different devices.
-What's more, encoder and decoder have different throughput, which makes it possible to deploy encoder on a high-performance device and decoder on a low-power device.
 
 ## 🚀 Highlights
 
