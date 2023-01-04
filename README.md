@@ -26,6 +26,7 @@ To demonstrate the advances of the **whisper-flow**, we conducted a simple bench
 </p>
 
 In the experiment, we use the vanila deployment flow as the baseline. According to the results, we can conclude that the distributed encoder-decoder deployment have **1.3x+ speedup** ⚡.  
+
 To reproduce the benchmark result, you can simply run the `scripts/benchmark.py`.  
 
 ## 💾 Installation
