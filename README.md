@@ -2,7 +2,7 @@
 <br>
 <br>
 <br>
-<img src=".github/overview.svg?raw=true" alt="best-practice-deploy-seq2seq" width="200px">
+<img src=".github/overview.svg?raw=true" alt="best-practice-deploy-seq2seq">
 <br>
 <br>
 <br>
