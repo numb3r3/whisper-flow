@@ -9,7 +9,7 @@ What's more, encoder and decoder have different throughput, which makes it possi
 <br>
 <br>
 <br>
-<img src=".github/overview.svg?raw=true" alt="best-practice-deploy-seq2seq">
+<img src=".github/overview.svg?raw=true" alt="best-practice-deploy-seq2seq" width="600px">
 <br>
 <br>
 <br>
