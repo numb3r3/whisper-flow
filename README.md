@@ -17,11 +17,15 @@ What's more, encoder and decoder have different throughput, which makes it possi
 </p>
 
 
-## 🚀 Highlights
+## ⚡ Benchmark
 
-- **Efficient**: The encoder and decoder is decoupled, which makes it possible to deploy encoder and decoder on different devices. 
-- **Scalable**: The encoder and decoder can be deployed with different replicas, which makes it possible to best utilize the device resources.
+To demonstrate the advances of the **whisper-flow**, we conducted a simple benchmark experiment on `small` model. 
 
+<p align="center">
+<img src=".github/benchmark.png" alt="benchmark">
+</p>
+
+In the experiment, we use the vanila deployment flow as the baseline. According to the results, we can conclude that the distributed encoder-decoder deployment have **1.3x+ speedup** ⚡.  
 
 ## 💾 Installation
 
